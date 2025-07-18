@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { ErrorMiddleware } from "./middleware/error.js";
 import userRouter from "./routes/user.route.js"
+import courseRouter from "./routes/course.route.js";
 
 
 
@@ -22,11 +23,14 @@ app.use(cors({
 
 
 app.use("/api/v1",userRouter)
+app.use('/api/v1',courseRouter)
 
-
-app.use(ErrorMiddleware);
 
 app.get("/test", (req:Request,res:Response,next:NextFunction)=> {
     res.send("hello world")
 });
+
+
+app.use(ErrorMiddleware);
+
 

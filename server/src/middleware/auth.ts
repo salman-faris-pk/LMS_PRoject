@@ -32,10 +32,11 @@ export const isAuthenticated=catchAsyncErrors(async(req:Request,res:Response,nex
 
 export const authorizeRoles =(...roles:string[]) => {
    return (req:Request,res:Response,next:NextFunction)=> {
-          if(!roles.includes(req.user?.role || '')){
+          if(!roles.includes(req.user?.role || '')){     //if role not includes in authorized users role then shows this error
             return next(new ErrorHandler(`Role: ${req.user?.role} is not allowed to access this resource`,403))
           };
 
+        //if the role includes in authorized users role then it calls next()     
           next();
    }
-}
+};

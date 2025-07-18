@@ -78,7 +78,6 @@ interface ICourse extends Document {
 
 const cousreDataSchema: Schema<ICourseData> = new mongoose.Schema({
        videoUrl:String,
-       videoThumbnail: Object,
        title:String,
        videoSection:String,
        desciption:String,

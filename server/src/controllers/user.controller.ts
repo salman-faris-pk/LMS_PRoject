@@ -62,11 +62,11 @@ export const registrationUser = catchAsyncErrors(async(req:Request,res:Response,
 });
 
 
+
 interface IActivationRequest{
    activation_token: string;
    activation_code: string;
 };
-
 
 export const activateUser=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction) => {
       try {
