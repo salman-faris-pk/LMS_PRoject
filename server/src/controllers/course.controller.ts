@@ -366,3 +366,47 @@ export const AddReview= catchAsyncErrors(async(req:Request,res:Response,next:Nex
     return next(new ErrorHandler(error.message,500));
   }
 });
+
+interface IReplyReviewdata{
+    comment:string;
+    courseId: string;
+    reviewId: string;
+}
+
+export const addReplyToReview=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction) => {
+   try {
+    const {comment,courseId,reviewId}=req.body as IReplyReviewdata;
+
+    const course=await CourseModel.findById(courseId);
+    if(!course){
+     return next(new ErrorHandler("Course nor found",404));
+    };
+
+    const review=course?.reviews?.find((rev:any) => rev._id.toString() === reviewId);
+     if(!review){
+     return next(new ErrorHandler("review nor found",404));
+    };
+
+    const replyData:any={
+        user:req.user,
+        comment
+    };
+    if(!review.commentReplies){
+        review.commentReplies=[];
+    };
+    
+     review?.commentReplies?.push(replyData);
+    await course.save();
+
+     await redis.del(`Course:${courseId}`)
+     await redis.set(`Course:${courseId}`, JSON.stringify(course));
+
+     res.status(200).json({
+       success:true,
+       course
+    });
+    
+   } catch (error:any) {
+     return next(new ErrorHandler(error.message,500));
+   }
+});
