@@ -8,7 +8,7 @@ export const createCourse=catchAsyncErrors(async(data:any,res:Response) => {
     
      const course = await CourseModel.create(data);
 
-     await redis.set(`course:${course._id}`, JSON.stringify(course) as any, 'EX',3600)
+     await redis.del("AllCourses");
 
      res.status(201).json({
         succes:true,
@@ -16,3 +16,5 @@ export const createCourse=catchAsyncErrors(async(data:any,res:Response) => {
      });
 
 });
+
+
