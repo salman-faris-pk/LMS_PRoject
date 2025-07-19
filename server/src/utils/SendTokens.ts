@@ -39,7 +39,7 @@ export const sendToken = (user: IUser, statusCode: number, res: Response) => {
   const accessToken = user.SignAccessToken();
   const refreshToken = user.SignRefreshToken();
 
-  redis.set(user.id, JSON.stringify(user) as any);
+  redis.set(user._id, JSON.stringify(user) as any);
 
   if (process.env.NODE_ENV === "production") { 
     accessTokenOptions.secure = true;

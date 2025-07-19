@@ -8,7 +8,7 @@ import { createActivationToken } from "../utils/GenerateActivationCode.js";
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { accessTokenOptions, refreshTokenOptions, sendToken } from "../utils/SendTokens.js";
 import { redis } from "../lib/redis.js";
-import { getUserById } from "../services/user.service.js";
+import { getAllUsersService, getUserById, updateRoleservice } from "../services/user.service.js";
 import { v2 as cloudinary } from "cloudinary"
 
 
@@ -395,3 +395,46 @@ export const updateProfieleAvatar = catchAsyncErrors(async(req:Request,res:Respo
     }
 });
 
+
+export const GetAllUsers=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction)=>{
+   try {
+
+       getAllUsersService(res)
+   } catch (error:any) {
+      return next(new ErrorHandler(error.message, 400)) 
+      
+   }
+});
+
+//by admin
+export const updateUserRoles=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction)=>{
+   try {
+      const {id,role}=req.body;
+      updateRoleservice(res,id,role)
+   } catch (error:any) {
+      return next(new ErrorHandler(error.message, 400)) 
+      
+   }
+});
+
+export const deletUser=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction)=>{
+   try {
+      const { id }=req.params ;
+      const user=await userModel.findById(id);
+      if(!user){
+        return next(new ErrorHandler('User not found',404))
+      };
+
+      await user.deleteOne({id});
+
+      await redis.del(id as string);
+
+       return res.status(200).json({
+        success: true,
+         message:"user deleted successfully"
+         });
+   } catch (error:any) {
+      return next(new ErrorHandler(error.message, 400)) 
+      
+   }
+})

@@ -2,11 +2,12 @@ import { NextFunction,Request,Response } from "express"
 import { catchAsyncErrors } from "../middleware/catchAsynErrors.js"
 import ErrorHandler from "../utils/ErrorHandler.js"
 import { v2 as cloudinary } from "cloudinary"
-import { createCourse } from "../services/course.service.js";
+import { createCourse, getAllCoursesService } from "../services/course.service.js";
 import CourseModel from "../models/course.model.js";
 import { redis } from "../lib/redis.js";
 import mongoose from "mongoose";
 import sendMail from "../lib/sendMail.js";
+import NotificationModel from "../models/notification.model.js";
 
 
 
@@ -183,6 +184,7 @@ interface IAddQuestionData{
     contentId: string;
 };
 
+//onlu user can--
 export const addQuestion = catchAsyncErrors(async(req:Request,res:Response,next:NextFunction) => {
     try {
         const {contentId:coursedataID,courseId,question}=req.body as IAddQuestionData;
@@ -209,6 +211,12 @@ export const addQuestion = catchAsyncErrors(async(req:Request,res:Response,next:
         };
 
         courseContent.questions.push(newQuestion);
+
+         await NotificationModel.create({
+            user: req.user?._id,
+            title:'New Question recieved!',
+            message:`You have a new question from ${courseContent?.title}`
+        });
 
         await course?.save();
 
@@ -271,9 +279,13 @@ export const Addanswer = catchAsyncErrors(async(req:Request,res:Response,next:Ne
         await redis.set(`user:${req.user?._id}:course:${courseId}`, JSON.stringify(course?.courseData), "EX", 3600);
 
 
-        if(req.user?._id === question.user._id){  //when user replies/answer to admins answer, then notification 
-           
-            //notification
+        if(req.user?._id === question.user._id){  //if user replies/answer to admins answer, then notification 
+            await NotificationModel.create({
+            user: req.user?._id,
+            title:'New Question reply recieved!',
+            message:`You have a new question reply from ${courseContent?.title}`
+            });
+             
         }else{
             //new answer/reply by admin to user then send a mail
             const data={
@@ -410,3 +422,35 @@ export const addReplyToReview=catchAsyncErrors(async(req:Request,res:Response,ne
      return next(new ErrorHandler(error.message,500));
    }
 });
+
+export const GetAllCourses=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction)=>{
+   try {
+     getAllCoursesService(res);
+   } catch (error:any) {
+      return next(new ErrorHandler(error.message, 400)) 
+      
+   }
+});
+
+
+
+export const deletCourse=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction)=>{
+   try {
+      const { id }=req.params;
+      const course=await CourseModel.findById(id);
+      if(!course){
+        return next(new ErrorHandler('course not found',404))
+      };
+
+      await course.deleteOne({id});
+      await redis.del(`Course:${id}`)   
+
+       return res.status(200).json({
+        success: true,
+         message:"course deleted successfully"
+         });
+   } catch (error:any) {
+      return next(new ErrorHandler(error.message, 400)) 
+      
+   }
+})

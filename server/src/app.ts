@@ -7,6 +7,8 @@ import helmet from "helmet";
 import { ErrorMiddleware } from "./middleware/error.js";
 import userRouter from "./routes/user.route.js"
 import courseRouter from "./routes/course.route.js";
+import orderRouter from "./routes/order.route.js";
+import notificationRouter from "./routes/notification.route.js";
 
 
 
@@ -22,8 +24,7 @@ app.use(cors({
 }));
 
 
-app.use("/api/v1",userRouter)
-app.use('/api/v1',courseRouter)
+app.use("/api/v1",userRouter,courseRouter,orderRouter,notificationRouter)
 
 
 app.get("/test", (req:Request,res:Response,next:NextFunction)=> {
