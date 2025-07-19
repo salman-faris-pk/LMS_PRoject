@@ -87,5 +87,5 @@ export const GetAllOrders=catchAsyncErrors(async(req:Request,res:Response,next:N
       return next(new ErrorHandler(error.message, 400)) 
       
    }
-})
+});
 
