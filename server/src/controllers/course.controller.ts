@@ -89,8 +89,6 @@ export const getSingleCourse=catchAsyncErrors(async(req:Request,res:Response,nex
         
          const course=await CourseModel.findById(courseId).select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links")
 
-         await redis.set(`Course:${courseId}`, JSON.stringify(course));
-
          res.status(200).json({
                 success:true,
                 course
@@ -141,7 +139,6 @@ export const getCourseByUser=catchAsyncErrors(async(req:Request,res:Response,nex
    try {
        const userCourseList=req.user?.courses;
        const courseId=req.params.id;
-       const userId=req.user?._id;
 
        const courseExist=userCourseList?.find((course:any) => course._id.toString() === courseId);
 
@@ -149,20 +146,9 @@ export const getCourseByUser=catchAsyncErrors(async(req:Request,res:Response,nex
           return next(new ErrorHandler('Your not eligible to access this course',404))
        };
 
-       const redisKey = `user:${userId}:course:${courseId}`;
-       const cachedContent = await redis.get(redisKey);
-
-       if (cachedContent) {
-         return res.status(200).json({
-        success: true,
-        content:JSON.parse(cachedContent)
-       });
-     }
-
+    
        const course=await CourseModel.findById(courseId);
        const content=course?.courseData;
-
-        await redis.set(redisKey, JSON.stringify(content), "EX", 3600);
 
        res.status(200).json({
          success:true,
@@ -220,9 +206,6 @@ export const addQuestion = catchAsyncErrors(async(req:Request,res:Response,next:
 
         await course?.save();
 
-        await redis.del(`user:${req.user?._id}:course:${courseId}`)
-        await redis.set(`user:${req.user?._id}:course:${courseId}`, JSON.stringify(course?.courseData), "EX", 3600);
-
         res.status(200).json({
             success:true,
             course
@@ -274,10 +257,6 @@ export const Addanswer = catchAsyncErrors(async(req:Request,res:Response,next:Ne
         question.questionReplies?.push(newAnswer);
 
         await course?.save();
-
-        await redis.del(`user:${req.user?._id}:course:${courseId}`)
-        await redis.set(`user:${req.user?._id}:course:${courseId}`, JSON.stringify(course?.courseData), "EX", 3600);
-
 
         if(req.user?._id === question.user._id){  //if user replies/answer to admins answer, then notification 
             await NotificationModel.create({
@@ -358,20 +337,17 @@ export const AddReview= catchAsyncErrors(async(req:Request,res:Response,next:Nex
 
     await course?.save();
 
-     await redis.del(`Course:${courseId}`)
-     await redis.set(`Course:${courseId}`, JSON.stringify(course));
+      //create a notification
+         NotificationModel.create({
+            user: req.user?._id,
+            title:'New Review Received!',
+            message:`${req.user?.name} has given a review on ${course?.name}`
+            });
 
-    const notification={
-        title: "New Review Received",
-        message:`${req.user?.name} has given a review on ${course?.name}`
-    };
-
-    //create a notification
-
-    res.status(200).json({
-       success:true,
-       course
-    });
+       res.status(200).json({
+         success:true,
+         course
+       });
 
     
   } catch (error:any) {
@@ -409,9 +385,6 @@ export const addReplyToReview=catchAsyncErrors(async(req:Request,res:Response,ne
     
      review?.commentReplies?.push(replyData);
     await course.save();
-
-     await redis.del(`Course:${courseId}`)
-     await redis.set(`Course:${courseId}`, JSON.stringify(course));
 
      res.status(200).json({
        success:true,

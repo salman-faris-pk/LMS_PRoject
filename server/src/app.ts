@@ -9,6 +9,7 @@ import userRouter from "./routes/user.route.js"
 import courseRouter from "./routes/course.route.js";
 import orderRouter from "./routes/order.route.js";
 import notificationRouter from "./routes/notification.route.js";
+import { getUserAnalytic } from "./controllers/analytic.controller.js";
 
 
 
@@ -24,7 +25,7 @@ app.use(cors({
 }));
 
 
-app.use("/api/v1",userRouter,courseRouter,orderRouter,notificationRouter)
+app.use("/api/v1",userRouter,courseRouter,orderRouter,notificationRouter,getUserAnalytic)
 
 
 app.get("/test", (req:Request,res:Response,next:NextFunction)=> {

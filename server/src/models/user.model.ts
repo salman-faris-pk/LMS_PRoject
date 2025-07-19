@@ -99,6 +99,7 @@ userschema.methods.comparePassword = async function(enteredpassword: string): Pr
     return await bcrypt.compare(enteredpassword, this.password)
 };
 
+userschema.index({ createdAt: 1 });
 
 const userModel: Model<IUser> = mongoose.model("User",userschema);
 

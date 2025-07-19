@@ -154,6 +154,11 @@ const courseSchema: Schema<ICourse> = new mongoose.Schema({
 });
 
 
+courseSchema.index({ createdAt: 1 });
+reviewSchema.index({ createdAt: 1 });
+commentSchema.index({ createdAt: 1 });
+
+
 const CourseModel: Model<ICourse>= mongoose.model('Course',courseSchema);
 
 export default CourseModel;

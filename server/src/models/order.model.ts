@@ -25,6 +25,10 @@ const orderSchema= new Schema<IOrder>({
 });
 
 
+
+orderSchema.index({ createdAt: 1 });
+
+
 const OrderModel: Model<IOrder>= mongoose.model('Order',orderSchema);
 
 

@@ -89,10 +89,3 @@ export const GetAllOrders=catchAsyncErrors(async(req:Request,res:Response,next:N
    }
 })
 
-// export const createOrder=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction) =>{
-//     try {
-        
-//     } catch (error:any) {
-//         return next(new ErrorHandler(error.message,500))
-//     }
-// });
