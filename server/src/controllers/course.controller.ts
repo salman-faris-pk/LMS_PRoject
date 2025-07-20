@@ -88,7 +88,8 @@ export const getSingleCourse=catchAsyncErrors(async(req:Request,res:Response,nex
         }else{
         
          const course=await CourseModel.findById(courseId).select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links")
-
+           
+         await redis.set(`Course:${courseId}`, JSON.stringify(course), 'EX', 432000)
          res.status(200).json({
                 success:true,
                 course
@@ -119,7 +120,7 @@ export const getAllCourse =catchAsyncErrors(async(req:Request,res:Response,next:
 
     const courses=await CourseModel.find().select("-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links")
 
-    await redis.set("AllCourses", JSON.stringify(courses), "EX", 3600); 
+    await redis.set("AllCourses", JSON.stringify(courses), "EX", 432000); 
 
     res.status(200).json({
      success:true,
@@ -338,7 +339,7 @@ export const AddReview= catchAsyncErrors(async(req:Request,res:Response,next:Nex
     await course?.save();
 
       //create a notification
-         NotificationModel.create({
+        await NotificationModel.create({
             user: req.user?._id,
             title:'New Review Received!',
             message:`${req.user?.name} has given a review on ${course?.name}`
@@ -416,7 +417,9 @@ export const deletCourse=catchAsyncErrors(async(req:Request,res:Response,next:Ne
       };
 
       await course.deleteOne({id});
-      await redis.del(`Course:${id}`)   
+      await redis.del(`Course:${id}`)
+      await redis.del("AllCourses");
+
 
        return res.status(200).json({
         success: true,

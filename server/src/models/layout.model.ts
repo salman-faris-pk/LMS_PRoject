@@ -44,6 +44,9 @@ const layoutSchema=new Schema<Layout>({
        }
 });
 
+
+layoutSchema.index({ type: 1 }, { unique: true });
+
 const LayoutModel = model<Layout>('Layout',layoutSchema)    
 
 export default LayoutModel;

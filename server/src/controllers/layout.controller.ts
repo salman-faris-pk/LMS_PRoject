@@ -5,82 +5,117 @@ import LayoutModel from "../models/layout.model.js";
 
 
 
+interface FAQItem {
+  question: string;
+  answer: string;
+}
 
-// export const createlayout=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction)=>{
-//    try {
-
-//     const { type }=req.body;
-//     if(type === 'Banner'){
-//         const {title,tagline,subTitle}=req.body;
-//          const banner ={
-//               title,
-//               tagline,
-//               subTitle
-//           };
-//           await LayoutModel.create(banner);
-//     };
-
-//     if(type === 'FAQ'){
-//         const { faq }=req.body;
-//         await LayoutModel.create(faq)
-//     };
-
-//     if(type === 'Categories'){
-//         const { categories }=req.body;
-//         await LayoutModel.create(categories)
-//     };
-
-//     res.status(200).json({
-//         success:true,
-//         message: "Layout created successfully"
-//     });
-//      } catch (error:any) {
-//       return next(new ErrorHandler(error.message, 400)) 
-//    }
-// });
+interface CategoryItem {
+  title: string;
+}
 
 export const createLayout = catchAsyncErrors(async (req: Request, res: Response, next: NextFunction) => {
   const { type, ...data } = req.body;
 
-  const existingLayout = await LayoutModel.findOne({ type }).lean();
-  if (existingLayout) {
+  if (await LayoutModel.exists({ type })) {
     return next(new ErrorHandler(`${type} layout already exists`, 400));
-  }
+  };
 
-  let layoutData: any;
+  let layoutData;
   switch (type) {
     case "Banner":
-      layoutData = {
-        banner: { data }
-      };
+      layoutData = { banner: { data } };
       break;
-
     case "FAQ":
-      layoutData = {
-        faq: data.faq.map((item: any) => ({
-          question: item.question,
-          answer: item.answer
-        }))
+      layoutData = { 
+        faq: (data.faq as FAQItem[]).map(({ question, answer }) => ({ question, answer })) 
       };
       break;
-
     case "Categories":
-      layoutData = {
-        categories: data.categories.map((item: any) => ({
-          title: item.title
-        }))
+      layoutData = { 
+        categories: (data.categories as CategoryItem[]).map(({ title }) => ({ title })) 
       };
       break;
-
     default:
       return next(new ErrorHandler("Invalid layout type", 400));
   }
 
-  await LayoutModel.create({ type, ...layoutData });
-
-  res.status(201).json({
-    success: true,
-    message: `${type} layout created successfully`
-  });
+  try {
+    await LayoutModel.create({ type, ...layoutData });
+    res.status(201).json({
+      success: true,
+      message: `${type} layout created successfully`,
+    });
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
 });
+
+
+export const editLayout = catchAsyncErrors(async (req: Request, res: Response, next: NextFunction) => {
+  const { type, ...data } = req.body; 
+   
+  const layoutExists = await LayoutModel.exists({ type });
+   if (!layoutExists) {
+   return next(new ErrorHandler(`${type} layout not found`, 404));
+  };
+
+  let updateData;
+  switch (type) {
+    case "Banner":
+      updateData = { banner: { data } };
+      break;
+    case "FAQ":
+      updateData = { 
+        faq: (data.faq as FAQItem[]).map(({ question, answer }) => ({ question, answer })) 
+      };
+      break;
+    case "Categories":
+      updateData = { 
+        categories: (data.categories as CategoryItem[]).map(({ title }) => ({ title })) 
+      };
+      break;
+    default:
+      return next(new ErrorHandler("Invalid layout type", 400));
+  }
+
+  try {
+    const updatedLayout = await LayoutModel.findOneAndUpdate(
+      { type },
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `${type} layout updated successfully`,
+      data: updatedLayout
+    });
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+
+export const getLayoutByType=catchAsyncErrors(async(req:Request,res:Response,next:NextFunction) => {
+  try {
+     const { type } = req.body;
   
+     if (!type) {
+      return next(new ErrorHandler("Layout type is required", 400));
+     };
+
+    const layout=await LayoutModel.findOne({type});
+     if (!layout) {
+     return next(new ErrorHandler("Layout not found", 404));
+      };
+
+    res.status(200).json({
+      success:true,
+      layout
+    });
+    
+  } catch (error:any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
