@@ -3,6 +3,7 @@ import { catchAsyncErrors } from "../middleware/catchAsynErrors.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import NotificationModel from "../models/notification.model.js";
 import cron from "node-cron"
+import { redis } from "../lib/redis.js";
 
 
 
@@ -53,3 +54,24 @@ cron.schedule("0 0 0 * * *", async() => {
    await NotificationModel.deleteMany({status: 'read', createdAt: {$lt: fourteenDays}});
    console.log("Deleted all read message");
 });
+
+
+cron.schedule("0 30 0 * * *", async () => {
+  try {
+    const info = await redis.info("memory");
+
+    const match = info.match(/used_memory:(\d+)/);
+    const usedMemoryBytes = match && match[1] ? parseInt(match[1], 10) : 0;
+    const usedMemoryMB = usedMemoryBytes / (1024 * 1024);
+
+    console.log(`Redis used memory: ${usedMemoryMB.toFixed(2)} MB`);
+
+    if (usedMemoryMB >= 27) {
+      await redis.flushall();
+      console.log("Redis memory exceeded 27 MB. All data deleted.");
+    }
+  } catch (err) {
+    console.error("Redis memory check failed:", err);
+  }
+});
+

@@ -1,7 +1,7 @@
 import {NextFunction,Response,Request} from "express"
 import {catchAsyncErrors} from "../middleware/catchAsynErrors.js"
 import ErrorHandler from "../utils/ErrorHandler.js"
-import OrderModel,{ IOrder } from "../models/order.model.js";
+import { IOrder } from "../models/order.model.js";
 import userModel from "../models/user.model.js";
 import CourseModel from "../models/course.model.js";
 import { getAllOrderService, newOrder } from "../services/order.service.js";
