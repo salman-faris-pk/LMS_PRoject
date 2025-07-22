@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useTheme } from 'next-themes';
-import { Moon, Sun, Menu, X, LogOut, EllipsisVertical } from "lucide-react";
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Moon, Sun, Home, BookOpen, Info, ShieldAlert, HelpCircle, User, EllipsisVertical } from "lucide-react";
+import React, { useState, useEffect, useCallback } from 'react';
 
 const Header = () => {
   const pathname = usePathname();
@@ -14,15 +14,14 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const links = useMemo(() => [
-    { href: "/", label: "Home", icon: "H" },
-    { href: "/courses", label: "Courses", icon: "C" },
-    { href: "/about", label: "About", icon: "A" },
-    { href: "/policy", label: "Policy", icon: "P" },
-    { href: "/faq", label: "FAQ", icon: "F" },
-  ], []);
-
-  const mobileLinks = useMemo(() => links.filter(link => link.href !== "/"), [links]);
+  const links = [
+    { href: "/", label: "Home", icon: <Home className="w-5 h-5" /> },
+    { href: "/courses", label: "Courses", icon: <BookOpen className="w-5 h-5" /> },
+    { href: "/about", label: "About", icon: <Info className="w-5 h-5" /> },
+    { href: "/policy", label: "Policy", icon: <ShieldAlert className="w-5 h-5" /> },
+    { href: "/faq", label: "FAQ", icon: <HelpCircle className="w-5 h-5" /> },
+    { href: "/profile", label: "Profile", icon: <User className="w-5 h-5" />, mobileOnly: true },
+  ];
 
   const handleScroll = useCallback(() => {
     setScrolled(window.scrollY > 15);
@@ -30,7 +29,6 @@ const Header = () => {
 
   useEffect(() => {
     setMounted(true);
-    
     if (typeof window !== 'undefined') {
       handleScroll();
       window.addEventListener('scroll', handleScroll, { passive: true });
@@ -42,7 +40,7 @@ const Header = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
-  const ThemeToggle = useMemo(() => (
+  const ThemeToggle = (
     <Button 
       variant="ghost" 
       size="icon" 
@@ -60,7 +58,7 @@ const Header = () => {
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>
-  ), [mounted, theme, toggleTheme]);
+  );
 
   return (
     <>
@@ -80,7 +78,7 @@ const Header = () => {
           {/* Desktop navigation */}
           <div className="flex items-center gap-6">
             <nav className="hidden md:flex items-center gap-4 mr-4">
-              {links.map((link) => (
+              {links.filter(link => !link.mobileOnly).map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -96,23 +94,18 @@ const Header = () => {
               ))}
             </nav>
 
-            {/* Right side elements */}
             <div className="flex items-center gap-2 md:gap-4">
-
-              {/* Show theme toggle and sign out on mobile */}
               <div className="flex items-center gap-2 md:hidden">
                 {ThemeToggle}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-transparent text-foreground/70 hover:text-foreground"
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="hover:bg-transparent ring-0 focus:ring-0 focus-visible:ring-0 outline-none cursor-pointer"
                 >
-                  <EllipsisVertical className="w-8 h-8" />
-                  <span className="sr-only">Sign out</span>
+                  <EllipsisVertical className="w-5 h-5" />
+                  <span className="sr-only">More options</span>
                 </Button>
               </div>
-
-              {/* Desktop right side elements */}
               <div className="hidden md:flex items-center gap-2 md:gap-4">
                 {ThemeToggle}
                 <div className="w-px h-6 bg-neutral-200 dark:bg-neutral-700 mx-1"></div>
@@ -123,55 +116,35 @@ const Header = () => {
                   </AvatarFallback>
                 </Avatar>
               </div>
-              
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile bottom navigation */}
-     
-      <div className="fixed md:hidden bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-t border-neutral-200/50 dark:border-neutral-800/80 z-50">
-  <div className="container px-0">
-    <nav className="flex justify-around items-center">
-      {mobileLinks.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          prefetch={false}
-          className={`flex flex-col items-center justify-center w-full py-3 text-xs font-medium transition-all ${
-            pathname === link.href
-              ? 'text-primary dark:text-emerald-400'
-              : 'text-foreground/70 hover:text-foreground'
-          }`}
-        >
-          <span className={`
-            text-xl mb-1 transition-transform
-            ${pathname === link.href ? 'scale-110' : 'scale-100'}
-          `}>
-            {link.icon}
-          </span>
-          <span className="text-[0.7rem] font-medium">{link.label}</span>
-        </Link>
-      ))}
-      <button className="flex flex-col items-center justify-center w-full py-3 text-xs font-medium text-foreground/70 hover:text-foreground">
-        <div className="relative mb-1">
-          <Avatar className="h-6 w-6">
-            <AvatarImage src="/fav.png" />
-            <AvatarFallback className="bg-gradient-to-r from-primary to-emerald-500 text-white text-xs">
-              CN
-            </AvatarFallback>
-          </Avatar>
-          <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-500 border-2 border-background"></span>
+      {/* Bottom Bar (Mobile) */}
+      <div className="fixed md:hidden bottom-4 left-0 right-0 flex justify-center px-4 z-50">
+        <div className="backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-full shadow-lg py-1 w-full max-w-md">
+          <div className="flex items-center justify-around">
+            {links.filter(link => link.mobileOnly || !link.mobileOnly).map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                prefetch={false}
+                className={`p-3 rounded-full transition-all ${
+                  pathname === link.href 
+                    ? "bg-primary/5 text-primary" 
+                    : "dark:text-slate-100 text-black/70 hover:bg-gray-50 dark:hover:bg-primary/20"
+                }`}
+              >
+                {link.icon}
+                <span className="sr-only">{link.label}</span>
+              </Link>
+            ))}
+          </div>
         </div>
-        <span className="text-[0.7rem] font-medium">Profile</span>
-      </button>
-    </nav>
-  </div>
-</div>
+      </div>
     </>
   );
 };
 
 export default Header;
-

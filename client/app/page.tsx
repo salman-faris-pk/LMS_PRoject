@@ -1,3 +1,4 @@
+import Hero  from "@/components/Hero";
 
 
 export const metadata = {
@@ -21,11 +22,8 @@ export const metadata = {
 export default function Home() {
    
   return (
-   <div className="h-screen">
-  
-     Hello world!
-    
-
-    </div>
+   <div>
+    <Hero />
+   </div>
   );
 }

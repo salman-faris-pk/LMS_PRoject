@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/Header";
 import { ScrollProgress } from "@/components/magicui/scroll-progress";
 
-
 const poppins = Poppins({
   variable: "--font-Poppins",
   subsets: ["latin"],
