@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import ErrorHandler from "../utils/ErrorHandler.js"
 import { catchAsyncErrors } from "../middleware/catchAsynErrors.js"
 import LayoutModel from "../models/layout.model.js";
-
+import { v2 as cloudinary } from "cloudinary"
 
 
 interface FAQItem {
@@ -24,7 +24,17 @@ export const createLayout = catchAsyncErrors(async (req: Request, res: Response,
   let layoutData;
   switch (type) {
     case "Banner":
-      layoutData = { banner: { data } };
+       const myCloud= await cloudinary.uploader.upload(data.image,{
+        folder:'layout',
+      });
+      const banner={
+        image:{
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
+        ...data
+      }
+      layoutData = { banner };
       break;
     case "FAQ":
       layoutData = { 
@@ -63,7 +73,24 @@ export const editLayout = catchAsyncErrors(async (req: Request, res: Response, n
   let updateData;
   switch (type) {
     case "Banner":
-      updateData = { banner: { data } };
+      const bannerData:any=await LayoutModel.findOne({type: 'Banner'});
+      if(bannerData){
+      await cloudinary.uploader.destroy(bannerData.image.public_id);
+      };
+
+      const myCloud= await cloudinary.uploader.upload(data.image,{
+        folder:'layout',
+      });
+      
+      const banner={
+        image:{
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
+        ...data
+      }
+
+      updateData = { banner};
       break;
     case "FAQ":
       updateData = { 

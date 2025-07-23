@@ -9,16 +9,22 @@ export interface FaqItems extends Document{
 
 export interface Category extends Document{
     title:string;
-}
+};
+
+
+export interface BannerImage extends Document{
+    punlic_id:string;
+    url:string;
+};
 
 interface Layout extends Document{
     type:string;
     faq:FaqItems[];
     categories: Category[];
     banner: {
+        image:BannerImage;
         title:string;
         subTitle:string;
-        tagline:string;
     }
 };
 
@@ -33,14 +39,19 @@ const CategoryShema=new Schema<Category>({
     title:{type:String},
 });
 
+const bannerImageShema = new Schema<BannerImage>({
+     punlic_id: {type:String},
+     url: {type:String}
+});
+
 const layoutSchema=new Schema<Layout>({
        type:{type:String},
        faq:[faqSchema],
        categories:[CategoryShema],
        banner:{
+          image: bannerImageShema,
           title:{type:String},
           subTitle:{type:String},
-          tagline:{type:String}
        }
 });
 
