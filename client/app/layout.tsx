@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Poppins,Josefin_Sans} from "next/font/google"
 import "./globals.css";
 import MainNavbar from "@/components/navbar/MainNavbar";
+import MobileNav from "@/components/navbar/MobNav";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -27,17 +29,19 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default  function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body
         className={`${poppins.variable} ${josefin.variable} antialiased`}
       >
-        <MainNavbar />
+        <MainNavbar/>
+        <MobileNav/>
         {children}
       </body>
     </html>

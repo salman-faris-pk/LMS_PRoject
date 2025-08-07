@@ -3,13 +3,18 @@
 import { useState, useEffect } from "react";
 import { StickyNavbar } from "./StickyNavbar";
 
-export const StickyNavbarWrapper = () => {
+interface WrapperProps{
+  toggleSidebar?:()=> void;
+};
+
+export const StickyNavbarWrapper = ({toggleSidebar}: WrapperProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   
   useEffect(() => {
     let ticking = false;
-    const threshold = (0.75 * window.innerHeight) / 4;
+    const threshold = 50;
+
 
     const handleScroll = () => {
       if (!ticking) {
@@ -32,5 +37,5 @@ export const StickyNavbarWrapper = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return <StickyNavbar opacity={scrollProgress} visible={isScrolled} />;
+  return <StickyNavbar opacity={isScrolled ? scrollProgress : 0} visible={isScrolled} toggleSidebar={toggleSidebar}/>;
 };
