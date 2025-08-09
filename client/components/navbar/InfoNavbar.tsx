@@ -23,16 +23,16 @@ const InfoNavbar = () => {
           />
           
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3 hover:text-primary transition-colors">
+            <div className="flex items-center gap-3 ">
               <PhoneCall size={20} strokeWidth={1.5} className="text-primary" aria-hidden="true" />
-              <Link href="tel:+918943084655" className="text-md whitespace-nowrap text-gray-200/90">
+              <Link href="tel:+918943084655" className="text-md hover:text-primary transition-colors whitespace-nowrap text-gray-200/90">
                 (+91) 8943084655
               </Link>
             </div>
             
-            <div className="flex items-center gap-3 hover:text-primary transition-colors">
+            <div className="flex items-center gap-3">
               <Mail size={20} strokeWidth={1.5} className="text-primary" aria-hidden="true" />
-              <Link href="mailto:codemaster@gmail.com" className="text-md whitespace-nowrap text-gray-200/90">
+              <Link href="mailto:codemaster@gmail.com" className="text-md hover:text-primary transition-colors whitespace-nowrap text-gray-200/90">
                 codemaster@gmail.com
               </Link>
             </div>

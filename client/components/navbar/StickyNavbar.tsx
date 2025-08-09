@@ -39,7 +39,7 @@ export const StickyNavbar = memo(({ opacity, visible,toggleSidebar }: StickyNavb
         backgroundColor: `rgba(255, 255, 255, ${opacity * 0.95})`,
       }}
     >
-      <div className="flex items-center justify-between md:max-w-7xl mx-auto w-full px-4 h-full">
+      <div className="flex items-center justify-between lg:max-w-7xl max-w-6xl mx-auto w-full px-4 h-full">
           <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-[1.02]">
             <Image
               src="/logo.png"

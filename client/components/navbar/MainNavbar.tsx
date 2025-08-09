@@ -15,8 +15,8 @@ const MainNavbar = () => {
     <div className="hidden md:block">
       <InfoNavbar />
       
-      <div className="bg-primary/15 w-full h-36 flex items-center pt-5 pb-2">
-        <div className="max-w-7xl mx-auto w-full px-4">
+      <div className="bg-secondary  w-full h-36 mx-auto pt-5 pb-2">
+        <div className="lg:max-w-7xl max-w-6xl mx-auto w-full px-8">
           <div className="border border-primary/20 bg-transparent rounded-lg h-24 flex items-center justify-between px-6 py-5">
             <Link href="/" className="flex items-center gap-2">
               <Image

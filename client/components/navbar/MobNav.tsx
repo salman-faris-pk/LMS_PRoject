@@ -43,7 +43,7 @@ export default function MobileNav() {
       <StickyNavbarWrapper toggleSidebar={toggleSidebar}/>
 
       <div className="md:hidden">
-        <div className="p-4 bg-primary/15 transition-opacity duration-300">
+        <div className="p-4 bg-secondary  transition-opacity duration-300">
           <div className="border border-primary/20 bg-transparent rounded-lg h-14 flex items-center justify-between px-2 py-3">
             <Link href="/" className="flex items-center gap-2">
               <Image
