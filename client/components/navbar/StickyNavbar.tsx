@@ -7,6 +7,8 @@ import { Button } from "../ui/button";
 import { NavItem } from "./NavItem";
 import { navLinks } from "@/config/navigation"
 import { Menu } from "lucide-react";
+import logo from '@/assets/logo.png';
+
 
 interface StickyNavbarProps {
   opacity: number;
@@ -42,10 +44,8 @@ export const StickyNavbar = memo(({ opacity, visible,toggleSidebar }: StickyNavb
       <div className="flex items-center justify-between lg:max-w-7xl max-w-6xl mx-auto w-full px-4 h-full">
           <Link href="/" className="flex items-center gap-2 transition-transform hover:scale-[1.02]">
             <Image
-              src="/logo.png"
+              src={logo}
               alt="Company Logo"
-              width={160}
-              height={40}
               className="h-8 md:h-14 w-auto transition-all duration-300"
               priority
             />

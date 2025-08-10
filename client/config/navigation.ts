@@ -1,3 +1,8 @@
+import { StaticImageData } from "next/image";
+import facebookIcon from '@/assets/facebook.svg';
+import xIcon from '@/assets/x.svg';
+import instagramIcon from '@/assets/instagram.svg';
+import redditIcon from '@/assets/reddit.svg';
 
 export interface NavLink {
   name: string;
@@ -28,14 +33,34 @@ export const navLinks: NavLink[] = [
 
 export type SocialMedia = {
   name: string;
-  icon: string;
+  icon: StaticImageData;
   alt: string;
   href: string;
 };
 
- export const socialMedia: SocialMedia[] = [
-    { name: 'Facebook', icon: '/facebook.svg', alt: 'Facebook', href: 'https://facebook.com' },
-    { name: 'Twitter', icon: '/x.svg', alt: 'Twitter', href: 'https://twitter.com' },
-    { name: 'Instagram', icon: '/instagram.svg', alt: 'Instagram', href: 'https://instagram.com' },
-    { name: 'Reddit', icon: '/reddit.svg', alt: 'Reddit', href: 'https://reddit.com' },
-  ];
+export const socialMedia: SocialMedia[] = [
+  { 
+    name: 'Facebook', 
+    icon: facebookIcon, 
+    alt: 'Facebook', 
+    href: 'https://facebook.com' 
+  },
+  { 
+    name: 'Twitter', 
+    icon: xIcon, 
+    alt: 'Twitter', 
+    href: 'https://twitter.com' 
+  },
+  { 
+    name: 'Instagram', 
+    icon: instagramIcon, 
+    alt: 'Instagram', 
+    href: 'https://instagram.com' 
+  },
+  { 
+    name: 'Reddit', 
+    icon: redditIcon, 
+    alt: 'Reddit', 
+    href: 'https://reddit.com' 
+  },
+];

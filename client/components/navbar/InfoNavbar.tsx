@@ -56,11 +56,9 @@ const InfoNavbar = () => {
               aria-label={social.name}
               className="bg-gray-200/90 p-1 rounded-full hover:bg-primary/80 transition-colors"
             >
-              <Image 
+              <Image
                 src={social.icon} 
-                alt={social.alt} 
-                width={16} 
-                height={16} 
+                alt={social.alt}  
                 className="w-4 h-4"
               />
             </Link>

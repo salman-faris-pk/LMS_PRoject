@@ -5,6 +5,7 @@ import InfoNavbar from "./InfoNavbar";
 import { StickyNavbarWrapper } from "./StickyNavbarWrapper";
 import { NavItem } from "./NavItem";
 import { navLinks } from "@/config/navigation"
+import logo from '@/assets/logo.png';
 
 
 const MainNavbar = () => {
@@ -20,12 +21,10 @@ const MainNavbar = () => {
           <div className="border border-primary/20 bg-transparent rounded-lg h-24 flex items-center justify-between px-6 py-5">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/logo.png"
-                alt="Company Logo"
-                width={160}
-                height={40}
-                className="h-12 w-auto"
-                priority
+                src={logo}
+                alt="company-logo"
+                 className="h-12 w-auto"
+                 priority
               />
               <span className="text-4xl font-bold">
                 <span className="text-black/80">Mr</span>
