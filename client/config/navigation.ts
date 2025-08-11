@@ -64,3 +64,4 @@ export const socialMedia: SocialMedia[] = [
     href: 'https://reddit.com' 
   },
 ];
+

@@ -96,12 +96,14 @@ const HeroSection = () => {
 
           <Button
             size="lg"
-            className="cursor-pointer mt-6 px-6 py-6 sm:px-12 md:text-md sm:py-8
-             bg-[#309255] text-white rounded-lg shadow-lg
-             hover:bg-black/90 hover:scale-105 hover:shadow-xl
-             transition-all duration-500 ease-in-out"
+            className="cursor-pointer mt-6 px-6 py-6 bg-primary text-white  sm:px-12 md:text-lg sm:py-8 group relative mx-auto overflow-hidden"
           >
-            Start A Course
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
+                       w-4 h-4 rounded-full bg-black
+                       scale-0 group-hover:scale-[15]
+                       transition-transform duration-500 ease-out
+                       pointer-events-none"></span>
+              <span className="relative z-10">Start A Course</span>
           </Button>
 
         
