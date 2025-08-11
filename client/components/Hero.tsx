@@ -72,7 +72,7 @@ const HeroSection = () => {
             />
           </div>
 
-          <p className="mt-9 md:mt-36 mb-2 text-sm sm:text-2xl text-green-700/90 font-Josefin">
+          <p className="mt-20 md:mt-36 mb-2 text-sm sm:text-2xl text-green-700/90 font-Josefin">
             Start your favourite course
           </p>
 
