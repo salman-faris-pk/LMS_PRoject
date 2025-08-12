@@ -61,7 +61,7 @@ const Courses = () => {
         <div className="w-[calc(100%-40px)]">
           <Carousel
             opts={{
-              align: "center",
+              align: "start",
             }}
             className="w-full h-full"
           >

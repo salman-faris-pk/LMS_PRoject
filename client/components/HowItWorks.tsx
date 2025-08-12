@@ -24,8 +24,8 @@ const HowItWorks = () => {
 
   return (
     <section className="container p-6">
-      <div className="text-center md:mb-5">
-        <h2 className="text-2xl md:text-3xl font-medium">
+      <div className="text-center md:mb-10">
+        <h2 className="text-2xl md:text-3xl font-medium text-gray-800">
           How It <span className="text-primary relative">Works
             <Image
               src={shapeUnderline}
@@ -38,19 +38,19 @@ const HowItWorks = () => {
         </h2>
       </div>
 
-  <div className="grid md:grid-cols-3 p-10  md:p-5 gap-y-6 gap-x-28 relative">
+  <div className="grid md:grid-cols-3 p-8 md:p-5 gap-y-6 gap-x-28 relative">
   {steps.map((step, index) => (
     <div 
       key={index}
       className="group p-8 rounded-xl bg-secondary"
     >
-      <div className="w-14 h-14 rounded-lg bg-white flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
+      <div className="w-16  h-14 rounded-lg bg-white  flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
         <span className="text-primary group-hover:text-white transition-colors duration-300">
           {step.icon}
         </span>
       </div>
       <h3 className="text-2xl font-Josefin mt-10 mb-3 text-[#212832]">{step.title}</h3>
-      <p className="text-[#696969] text-md w-2/3">{step.description}</p>
+      <p className="text-[#696969] text-md md:w-2/3">{step.description}</p>
     </div>
   ))}
   

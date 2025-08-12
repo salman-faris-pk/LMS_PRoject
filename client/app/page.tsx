@@ -1,6 +1,7 @@
 import Courses from "@/components/Courses";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
+import LatestBlogs from "@/components/LatestBlogs";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <Hero />
       <Courses />
       <HowItWorks />
+      <LatestBlogs />
     </div>
   );
 }
