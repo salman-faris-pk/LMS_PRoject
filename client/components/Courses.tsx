@@ -26,7 +26,7 @@ const Courses = () => {
   ];
 
   return (
-    <div className="lg:max-w-7xl max-w-6xl mx-auto h-screen px-4 mt-12 md:mt-16 mb-40">
+    <div className="container h-full px-4 mt-14 md:mt-16 mb-10">
       <div className="flex flex-col md:flex-row md:justify-between">
         <h1 className="text-xl md:text-4xl md:tracking-wide font-medium tracking-tighter text-gray-700">
           All{" "}
@@ -95,7 +95,7 @@ const Courses = () => {
         <CourseCard />
 
 
-      <div className="flex items-center justify-center mt-16">      
+      <div className="flex items-center justify-center mt-10 md:mt-16">      
         <Button size={'lg'} className="group relative mx-auto overflow-hidden px-9 py-7 rounded-md bg-secondary border border-primary text-[#309255] hover:text-white">
       <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
                        w-4 h-4 rounded-full bg-primary

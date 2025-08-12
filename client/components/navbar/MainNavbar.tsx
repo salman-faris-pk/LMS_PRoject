@@ -17,7 +17,7 @@ const MainNavbar = () => {
       <InfoNavbar />
       
       <div className="bg-secondary  w-full h-36 mx-auto pt-5 pb-2">
-        <div className="lg:max-w-7xl max-w-6xl mx-auto w-full px-8">
+        <div className="container w-full px-8">
           <div className="border border-primary/20 bg-transparent rounded-lg h-24 flex items-center justify-between px-6 py-5">
             <Link href="/" className="flex items-center gap-2">
               <Image

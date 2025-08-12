@@ -61,7 +61,8 @@ const HeroSection = () => {
       </div>
 
 
-      <div className="lg:max-w-7xl max-w-6xl mx-auto min-h-[500px] grid grid-cols-1 md:grid-cols-3 relative px-4 md:px-8">
+     {/** main section */}
+      <div className="container min-h-[500px] grid grid-cols-1 md:grid-cols-3 relative px-4 md:px-8">
         {/* Left Content - spans 1 column */}
         <div className="text-left z-10 md:col-span-01 -mt-12">
           <div className="relative">

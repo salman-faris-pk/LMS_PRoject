@@ -90,13 +90,17 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
 
 }
+
+ .container {
+    @apply lg:max-w-7xl max-w-6xl mx-auto;
+  }
 
 @layer utilities {
   @keyframes rightToLeft {
