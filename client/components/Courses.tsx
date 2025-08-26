@@ -28,7 +28,7 @@ const Courses = () => {
   return (
     <div className="container h-full px-4 mt-14 md:mt-16 mb-10">
       <div className="flex flex-col md:flex-row md:justify-between">
-        <h1 className="text-xl md:text-4xl md:tracking-wide font-medium tracking-tighter text-gray-700">
+        <h1 className="text-xl md:text-4xl md:tracking-normal font-normal tracking-tighter text-gray-700">
           All{" "}
           <span className="relative inline-block px-1">
             <span className="text-primary">Courses</span>
@@ -96,7 +96,7 @@ const Courses = () => {
 
 
       <div className="flex items-center justify-center mt-10 md:mt-16">      
-        <Button size={'lg'} className="group relative mx-auto overflow-hidden px-9 py-7 rounded-md bg-secondary border border-primary text-[#309255] hover:text-white">
+      <Button size={'lg'} className="group relative mx-auto overflow-hidden px-9 py-7 rounded-md bg-secondary border-[.5px] md:border border-primary text-[#309255] hover:text-white">
       <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
                        w-4 h-4 rounded-full bg-primary
                        scale-0 group-hover:scale-[15]

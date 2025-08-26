@@ -7,8 +7,8 @@ const LatestBlogs = () => {
   return (
     <div className="container mt-5 md:mt-16 mb-10">
           <div className="text-center md:mb-5">
-        <h2 className="text-3xl md:text-4xl font-medium tracking-wide text-gray-800">
-            Latest<span className="text-primary relative"> {" "} Blogs
+        <h2 className="text-3xl md:text-4xl font-normal  text-gray-800">
+            Latest{" "}<span className="text-primary relative">{" "} Blogs
             <Image
               src={shapeUnderline}
               alt="underline"

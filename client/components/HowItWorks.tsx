@@ -23,10 +23,10 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="container p-6">
+    <section className="container md:mt-20 p-6 md:p-0">
       <div className="text-center md:mb-10">
-        <h2 className="text-2xl md:text-3xl font-medium text-gray-800">
-          How It <span className="text-primary relative">Works
+        <h2 className="text-2xl md:text-4xl font-normal text-gray-800">
+          How It <span className="text-primary relative">Works?
             <Image
               src={shapeUnderline}
               alt="underline"

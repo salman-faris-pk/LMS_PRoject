@@ -28,7 +28,7 @@ const MainNavbar = () => {
               />
               <span className="text-4xl font-bold">
                 <span className="text-black/80">Mr</span>
-                <span className="text-green-800/80">Code</span>
+                <span className="text-primary">Code</span>
               </span>
             </Link>
 

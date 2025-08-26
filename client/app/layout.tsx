@@ -3,6 +3,7 @@ import { Poppins,Josefin_Sans} from "next/font/google"
 import "./globals.css";
 import MainNavbar from "@/components/navbar/MainNavbar";
 import MobileNav from "@/components/navbar/MobNav";
+import Footer from "@/components/Footer";
 
 
 const poppins = Poppins({
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   description: 'Master programming with interactive courses in Python, JavaScript, React, and more. Start coding today with our expert-led tutorials.',
   keywords: ['programming courses', 'learn to code', 'web development', 'Python tutorial', 'JavaScript course'],
   icons:{
-    icon: '/favicon.png'
+    icon: '/logo.svg'
   }
 };
 
@@ -43,6 +44,7 @@ export default  function RootLayout({
         <MainNavbar/>
         <MobileNav/>
         {children}
+        <Footer />
       </body>
     </html>
   );
