@@ -63,7 +63,7 @@ const FAQSection = () => {
                   {faq.question}
                 </h1>
 
-                <span className={`rounded-full ${faq.isOpen ? 'text-gray-400 bg-gray-200' : 'text-white bg-primary'}`}>
+                <span className={`rounded-full ${faq.isOpen ? 'text-gray-400 bg-gray-200' : 'text-white bg-primary/80'}`}>
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     className="w-6 h-6" 

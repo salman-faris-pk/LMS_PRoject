@@ -15,8 +15,8 @@ export const navLinks: NavLink[] = [
   {
     name: "Courses",
     subLinks: [
-      { name: "All Courses", href: "/courses/all" },
-      { name: "Free Courses", href: "/courses/free" },
+      { name: "All Courses", href: "/allcourses" },
+      { name: "Free Courses", href: "/freecourses" },
     ],
   },
   {
