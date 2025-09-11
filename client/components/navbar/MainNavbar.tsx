@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "../ui/button";
 import InfoNavbar from "./InfoNavbar";
 import { StickyNavbarWrapper } from "./StickyNavbarWrapper";
 import { NavItem } from "./NavItem";
@@ -45,18 +44,17 @@ const MainNavbar = () => {
 
             <div className="flex items-center gap-4">
               <Link
-                href="/login"
+                href="/auth-login"
                 className="px-4 py-2 text-gray-800 text-xl hover:text-primary font-normal transition-colors"
               >
                 Sign In
               </Link>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border border-primary px-10 cursor-pointer py-7 text-xl font-normal hover:text-white hover:bg-green-700 hover:border-green-700 transition-all duration-300 rounded-md"
+              <Link
+              href='/auth-signup'
+              className="border border-primary px-10 cursor-pointer py-4 text-xl font-normal hover:text-white hover:bg-green-700 hover:border-green-700 transition-all duration-300 rounded-md"
               >
                 Sign Up
-              </Button>
+              </Link>
             </div>
           </div>
         </div>

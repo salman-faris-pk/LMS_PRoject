@@ -4,6 +4,7 @@ import "./globals.css";
 import MainNavbar from "@/components/navbar/MainNavbar";
 import MobileNav from "@/components/navbar/MobNav";
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 
 const poppins = Poppins({
@@ -45,6 +46,7 @@ export default  function RootLayout({
         <MobileNav/>
         {children}
         <Footer />
+        <Toaster/>
       </body>
     </html>
   );

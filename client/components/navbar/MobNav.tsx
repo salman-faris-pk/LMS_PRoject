@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { StickyNavbarWrapper } from "./StickyNavbarWrapper";
 import { Button } from "../ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import logo from "@/assets/logo.png";
 
 export interface NavLink {
@@ -17,6 +17,7 @@ export interface NavLink {
 
 export default function MobileNav() {
   const pathname = usePathname();
+  const router=useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>(
     {}
@@ -129,6 +130,10 @@ export default function MobileNav() {
             <Button
               size="sm"
               variant="ghost"
+               onClick={() => {
+                router.push('/auth-login');
+                 setIsOpen(false);
+             }}
               className="flex-1 border border-green-700 border-b-2 border-b-green-800 py-5 text-sm font-medium"
             >
               Sign In
@@ -136,6 +141,10 @@ export default function MobileNav() {
             <Button
               size="sm"
               variant="ghost"
+               onClick={() => {
+              router.push('/auth-signup');
+               setIsOpen(false);
+               }}
               className="flex-1 border border-green-700 border-b-2 border-b-green-800 py-5 text-sm font-medium"
             >
               Sign Up

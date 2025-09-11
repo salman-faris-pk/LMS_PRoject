@@ -7,13 +7,13 @@ import LatestBlogs from "@/components/LatestBlogs";
 
 export default function Home() {
   return (
-    <div>
+    <>
       <Hero />
       <Courses />
       <HowItWorks />
       <LatestBlogs />
       <Feedbacks />
       <FAQSection />
-    </div>
+    </>
   );
 }

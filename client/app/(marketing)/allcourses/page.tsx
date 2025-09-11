@@ -1,5 +1,7 @@
 import TopSection from '@/components/TopSection'
+import { Button } from '@/components/ui/button'
 import React from 'react'
+import { toast } from "sonner"
 
 const page = () => {
   return (
@@ -11,7 +13,8 @@ const page = () => {
         ]}
         highlight='Courses'
       />
-        
+   
+       
         All courses page</div>
   )
 }
