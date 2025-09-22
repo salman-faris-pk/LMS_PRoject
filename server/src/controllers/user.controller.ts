@@ -129,7 +129,6 @@ export const loginUser=catchAsyncErrors(async(req:Request,res:Response,next:Next
       if(!isPassowordMatch){
          return next(new ErrorHandler("Invalid email and password",400))
       };
-       
        sendToken(user,200,res);
 
      } catch (error:any) {
@@ -158,7 +157,6 @@ export const logoutUser=catchAsyncErrors(async(req:Request,res:Response,next:Nex
 
 
 
-//update accesstoken with refreshToken and generate new both tokens
 export const updateAccessToken =catchAsyncErrors(async(req:Request,res:Response,next:NextFunction) => {
 
    try {

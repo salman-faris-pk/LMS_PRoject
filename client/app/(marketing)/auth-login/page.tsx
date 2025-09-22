@@ -1,130 +1,209 @@
-import TopSection from '@/components/TopSection'
+"use client"
+import { useActionState, useState } from 'react';
 import React from 'react'
+import { safeParse, flatten } from 'valibot';
+import TopSection from '@/components/TopSection'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { signInSchema,SignInState } from "@/lib/validation-schemas"
+import { Eye, EyeOff } from "lucide-react";
 
-const page = () => {
+
+async function submitForm(prevState: SignInState, formData: FormData): Promise<SignInState> {
+  const rawData = {
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
+  };
+
+  const result = safeParse(signInSchema, rawData);
+
+  if (!result.success) {
+    const flattenedErrors = flatten(result.issues);
+    return {
+      message: 'Please fix the validation errors',
+      errors: {
+        email: flattenedErrors.nested?.email,
+        password: flattenedErrors.nested?.password,
+      },
+      fieldValues: rawData,
+    };
+  }
+
+  try {
+    const response = await fetch('http://localhost:8011/api/v1/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(result.output),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      
+      return { 
+        message: errorData.message || 'SignIn failed', 
+        errors: errorData.errors || {},
+        fieldValues: rawData,
+      };
+    }
+
+    const data = await response.json();
+    
+    return { 
+      message: data.message, 
+      errors: {},
+      fieldValues: { email: '', password: '' }
+    };
+    
+  } catch (error) {
+    return { 
+      message: 'Network error. Please try again.', 
+      errors: {},
+      fieldValues: rawData,
+    };
+  }
+};
+
+const initialState: SignInState = {
+  message: '',
+  errors: {},
+  fieldValues: { email: '', password: '' },
+};
+
+
+const Page = () => {
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [state, action, isPending] = useActionState(submitForm, initialState);
+
   return (
-     <>
-     <TopSection breadcrumbs={[
+    <>
+      <TopSection
+        breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Sign-In" },
         ]}
       />
-     
-<section className='bg-white md:py-10'>
-      <div className="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800 lg:max-w-4xl">
-  <div
-    className="hidden bg-cover lg:block lg:w-1/2"
-    style={{
-      backgroundImage:
-        "url('https://images.unsplash.com/photo-1606660265514-358ebbadc80d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1575&q=80')",
-    }}
-  ></div>
 
-  <div className="w-full px-6 py-8 md:px-8 lg:w-1/2">
-    <div className="flex justify-center mx-auto">
-      <p className="text-2xl text-center text-gray-600 dark:text-gray-200">
-      Welcome back!
-    </p>
-    </div>
+      <section className="bg-white md:py-10">
+        <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-6 md:p-8">
+          <h2 className="text-2xl font-semibold text-center text-gray-700">
+            Welcome back!
+          </h2>
 
-    <a
-      href="#"
-      className="flex items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-    >
-      <div className="px-4 py-2">
-        <svg className="w-6 h-6" viewBox="0 0 40 40">
-          <path
-            d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
-            fill="#FFC107"
-          />
-          <path
-            d="M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z"
-            fill="#FF3D00"
-          />
-          <path
-            d="M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z"
-            fill="#4CAF50"
-          />
-          <path
-            d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758C26.0142 27.975 26.015 27.975 26.0158 27.9742L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
-            fill="#1976D2"
-          />
-        </svg>
-      </div>
+          {/* Google Sign-In */}
+          <Button
+            variant="outline"
+            size="lg"
+            className="mt-6 w-full flex items-center justify-center gap-2"
+          >
+            <svg className="w-6 h-6" viewBox="0 0 40 40">
+              <path
+                d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
+                fill="#FFC107"
+              />
+              <path
+                d="M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z"
+                fill="#FF3D00"
+              />
+              <path
+                d="M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z"
+                fill="#4CAF50"
+              />
+              <path
+                d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
+                fill="#1976D2"
+              />
+            </svg>
+            Sign in with Google
+          </Button>
 
-      <span className="w-5/6 px-4 py-3 font-bold text-center">
-        Sign in with Google
-      </span>
-    </a>
+          {/* GitHub Sign-In */}
+          <Button
+            variant="outline"
+            size="lg"
+            className="mt-6 w-full flex items-center justify-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2.1c-3.2.7-3.9-1.4-3.9-1.4-.5-1.1-1.2-1.4-1.2-1.4-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1.7 1.6 3 1.1.1-.7.4-1.1.7-1.4-2.5-.3-5.1-1.2-5.1-5.3 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1a9.5 9.5 0 015 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 4.1-2.6 5-5.1 5.3.4.3.7.9.7 1.9v2.9c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.65 18.35.5 12 .5z"
+              />
+            </svg>
+            Sign in with GitHub
+          </Button>
 
-    <div className="flex items-center justify-between mt-4">
-      <span className="w-1/5 border-b dark:border-gray-600 lg:w-1/4"></span>
+          <div className="flex items-center justify-between mt-6">
+            <span className="w-1/5 border-b"></span>
+            <p className="text-xs text-center text-gray-500 uppercase">
+              or login with email
+            </p>
+            <span className="w-1/5 border-b"></span>
+          </div>
 
-      <a
-        className="text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline"
-      >
-        or login with email
-      </a>
+          <form action={action}>
+          <div className="mt-6">
+            <Label htmlFor="email" className="mb-2">Email</Label>
+            <Input id="email" type="email" name='email' placeholder="Enter your email" className="p-5" 
+             defaultValue={state.fieldValues?.email} required
+            />
+            {state.errors?.email && (
+             <span className="text-xs text-red-700">{state.errors.email.join(', ')}</span>
+            )}
+          </div>
 
-      <span className="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
-    </div>
+          <div className="mt-4 relative">
+            <Label htmlFor="password" className="mb-2">Password</Label>
+            <Input id="password" type={showPassword ? "text" : "password"} name='password' placeholder="Enter your password" className="p-5 pr-12" 
+             defaultValue={state.fieldValues?.password} required
+            />
+             <button
+              type="button"
+              className="absolute right-3 top-[2.2rem] text-gray-500 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+               >
+             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+            {state.errors?.password && (
+          <span className="text-xs text-red-700">{state.errors.password.join(', ')}</span>
+           )}
+          </div>
 
-    <div className="mt-4">
-      <label
-        className="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200"
-        htmlFor="LoggingEmailAddress"
-      >
-        Email Address
-      </label>
-      <input
-        id="LoggingEmailAddress"
-        className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
-        type="email"
-      />
-    </div>
+          <Button className="mt-6 w-full" size="lg" disabled={isPending}>
+             {isPending ? 'Signing ...' : 'Sign In'}
+          </Button>
 
-    <div className="mt-4">
-      <div className="flex justify-between">
-        <label
-          className="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200"
-          htmlFor="loggingPassword"
-        >
-          Password
-        </label>
-        
-      </div>
+          {state.message && (
+           <p className='w-full bg-green-50  mt-2 p-3 rounded-md text-xs text-green-800'>
+            {state.message}
+           </p>
+           )}
+          </form>
 
-      <input
-        id="loggingPassword"
-        className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300"
-        type="password"
-      />
-    </div>
-
-    <div className="mt-6">
-      <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
-        Sign In
-      </button>
-    </div>
-
-    <div className="flex items-center justify-between mt-4">
-      <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
-
-      <a
-        href="/auth-signup"
-        className="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"
-      >
-        or sign up
-      </a>
-
-      <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
-    </div>
-  </div>
-</div>
-</section>
-
+          <div className="flex items-center justify-between mt-4">
+            <span className="w-1/5 border-b"></span>
+            <a
+              href="/auth-signup"
+              className="text-xs text-gray-500 uppercase hover:underline"
+            >
+              or sign up
+            </a>
+            <span className="w-1/5 border-b"></span>
+          </div>
+        </div>
+      </section>
     </>
   )
 }
 
-export default page
+export default Page

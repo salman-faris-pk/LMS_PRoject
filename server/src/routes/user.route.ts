@@ -19,6 +19,4 @@ userRouter.put("/update-user-role",isAuthenticated,authorizeRoles('admin'),updat
 userRouter.delete("/delete-user/:id",isAuthenticated,authorizeRoles('admin'),deletUser)
 
 
-
-
 export default userRouter;

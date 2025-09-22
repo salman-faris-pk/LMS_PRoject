@@ -22,7 +22,8 @@ app.use(helmet({
 }));
 
 app.use(cors({
-    origin: process.env.ORIGIN
+    origin:"http://localhost:4017",
+     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
 
