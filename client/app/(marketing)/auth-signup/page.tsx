@@ -1,10 +1,26 @@
+"use client"
 import TopSection from '@/components/TopSection'
-import React from "react"
+import React, { useActionState, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { SignUpState } from '@/lib/validation-schemas'
+import { signUp } from './api/signUp'
+import { Eye, EyeOff } from 'lucide-react'
+
+
+const initialState: SignUpState = {
+  message: '',
+  errors: {},
+  fieldValues: { email: '', password: '',name:'' },
+};
 
 const Page = () => {
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [state, action, isPending] = useActionState(signUp, initialState);
+    
+  
   return (
     <>
       <TopSection
@@ -15,49 +31,77 @@ const Page = () => {
       />
       <section className="bg-white md:py-10">
         <div className="w-full max-w-md p-6 m-auto bg-white rounded-lg shadow-md">
-          {/* Page Heading */}
           <h2 className="text-2xl font-semibold text-center text-gray-800">
             Create an Account
           </h2>
 
-          <form className="mt-6">
-            {/* Username */}
+          <form className="mt-6" action={action}>
             <div>
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="name">Username</Label>
               <Input
-                id="username"
+                id="name"
+                name='name'
                 type="text"
                 placeholder="Enter your username"
                 className="mt-2 p-5"
+                required
+                defaultValue={state.fieldValues?.name}
               />
+              {state.errors?.name && (
+                <span className="text-xs text-red-700">{state.errors.name.join(', ')}</span>
+              )}
             </div>
 
-            {/* Email */}
             <div className="mt-4">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="register-email">Email</Label>
               <Input
-                id="email"
+                id="register-email"
                 type="email"
+                name='email'
                 placeholder="Enter your email"
                 className="mt-2 p-5"
+                defaultValue={state.fieldValues?.email}
+                autoComplete='email'
+                required
               />
+              {state.errors?.email && (
+                <span className="text-xs text-red-700">{state.errors.email.join(', ')}</span>
+              )}
             </div>
 
-            {/* Password */}
-            <div className="mt-4">
-              <Label htmlFor="password">Password</Label>
+            <div className="mt-4 relative">
+              <Label htmlFor="register-password">Password</Label>
               <Input
-                id="password"
-                type="password"
+                id="register-password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                defaultValue={state.fieldValues?.password}
                 placeholder="Enter your password"
-                className="mt-2 p-5"
+                className="mt-2 p-5 pr-12"
+                autoComplete='current-password'
+                required
               />
+               <button
+                type="button"
+                className="absolute right-3 top-[2.2rem] text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+              {state.errors?.password && (
+                <span className="text-xs text-red-700">{state.errors.password.join(', ')}</span>
+              )}
             </div>
 
-            {/* Submit */}
-            <div className="mt-6">
-              <Button className="w-full">Sign Up</Button>
-            </div>
+              <Button className="mt-6 w-full" disabled={isPending}>
+                {isPending ? "sign...." : "Sign Up" }
+              </Button>
+
+              {state.message && (
+              <p className="w-full bg-red-100 mt-2 p-3 rounded-md text-xs text-red-800">
+                {state.message}
+              </p>
+            )}
           </form>
 
           {/* Divider */}

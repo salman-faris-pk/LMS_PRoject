@@ -92,15 +92,16 @@ const Page = () => {
 
           <form action={action}>
             <div className="mt-6">
-              <Label htmlFor="email" className="mb-2">Email</Label>
+              <Label htmlFor="login-email" className="mb-2">Email</Label>
               <Input
-                id="email"
+                id="login-email"
                 type="email"
                 name="email"
                 placeholder="Enter your email"
                 className="p-5"
                 defaultValue={state.fieldValues?.email}
                 required
+                autoComplete="email"
               />
               {state.errors?.email && (
                 <span className="text-xs text-red-700">{state.errors.email.join(', ')}</span>
@@ -108,15 +109,16 @@ const Page = () => {
             </div>
 
             <div className="mt-4 relative">
-              <Label htmlFor="password" className="mb-2">Password</Label>
+              <Label htmlFor="login-password" className="mb-2">Password</Label>
               <Input
-                id="password"
+                id="login-password"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Enter your password"
                 className="p-5 pr-12"
                 defaultValue={state.fieldValues?.password}
                 required
+                autoComplete='current-password'
               />
               <button
                 type="button"
