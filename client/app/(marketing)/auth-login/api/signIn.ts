@@ -24,6 +24,7 @@ export async function signIn(prevState: SignInState,formData: FormData): Promise
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/login`, {
       method: 'POST',
+      credentials: "include",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(result.output),
     });

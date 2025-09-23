@@ -24,33 +24,40 @@ export const accessTokenOptions: ITokenOptions = {
   expires: new Date(Date.now() + accessTokenExpires * 60 * 60 * 1000),
   maxAge: accessTokenExpires * 60 * 60 * 1000,
   httpOnly: true,
-  sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
+  // sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
 };
 
 export const refreshTokenOptions: ITokenOptions = {
   expires: new Date(Date.now() + refreshTokenExpires * 24 * 60 * 60 * 1000),
   maxAge: refreshTokenExpires * 24 * 60 * 60 * 1000,
   httpOnly: true,
-  sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
+  // sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
 };
+
+
 
 export const sendToken = (user: IUser, statusCode: number, res: Response) => {
   
   const accessToken = user.SignAccessToken();
   const refreshToken = user.SignRefreshToken();
+   
+  const userObj = user.toObject?.() || { ...user };
+  delete (userObj as any).password;
 
-  redis.set(user._id, JSON.stringify(user) as any);
+  redis.set(user._id, JSON.stringify(userObj) as any); 
 
-  if (process.env.NODE_ENV === "production") { 
-    accessTokenOptions.secure = true;
-  }
-
-  res.cookie("access_Token", accessToken, accessTokenOptions);
-  res.cookie("refresh_Token", refreshToken, refreshTokenOptions);
-
-  res.status(statusCode).json({
-    succcess: true,
-    user,
-    accessToken,
-  });
+  res.status(statusCode)
+    .cookie("access_Token", accessToken, accessTokenOptions)
+    .cookie("refresh_Token", refreshToken, refreshTokenOptions)
+    .json({ success: true, user:userObj, accessToken });
+    
 };
+
+
+
+
+
